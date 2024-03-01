@@ -46,15 +46,12 @@ const movieSlice = createSlice({
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchAsyncMovies.fulfilled, (state, action) => {
-          // Add user to the state array
-          return {...state,movie:action.payload}
-        })
+             return {...state,movie:action.payload}
+      })
         builder.addCase(fetchAsyncShows.fulfilled, (state, action) => {
-            // Add user to the state array
-            return {...state,shows:action.payload}
+             return {...state,shows:action.payload}
           })
           builder.addCase(fetchAsyncMoviesOrShowsDetails.fulfilled, (state, action) => {
-            // Add user to the state array
             return {...state,selectMovieOrShow:action.payload}
           })
     }
