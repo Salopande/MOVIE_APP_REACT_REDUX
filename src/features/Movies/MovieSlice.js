@@ -1,20 +1,68 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import movieApi from '../../utils/apis/MoviesAPI';
+import {APIKEY} from "../../utils/apis/MovieApikeys";
 
+export const fetchAsyncMovies = createAsyncThunk('movies/fetchAsyncMovie', async()=>{
+    const movieText ="Harry";
+    const response = await movieApi.get(`?apiKey=${APIKEY}&s=${movieText}&type=movie`);
+    return response.data;
+})
+
+export const fetchAsyncShows = createAsyncThunk(
+    "movies/fetchAsyncShows",
+    async () => {
+      const seriesText = "Friends";
+      const response = await movieApi.get(
+        `?apiKey=${APIKEY}&s=${seriesText}&type=series`
+      );
+      return response.data;
+    }
+  );
+
+  export const fetchAsyncMoviesOrShowsDetails = createAsyncThunk(
+    "movies/fetchAsyncMoviesOrShowsDetails",
+    async (id) => {
+      const response = await movieApi.get(
+        `?apiKey=${APIKEY}&i=${id}&Plot=full`
+      );
+      return response.data;
+    }
+  );
 
 const initialState = {
-    movie : {}
+    movie : {},
+    shows: {},
+    selectMovieOrShow: {},
 }
 
 const movieSlice = createSlice({
     name:"movies",
     initialState,
     reducers :{
-        addMovies : (state, action)=>{
-            state.movie = action.payload;
+         removeSelectedMovieOrShow: (state)=>{
+          state.selectMovieOrShow ={}
         }
+    },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder.addCase(fetchAsyncMovies.fulfilled, (state, action) => {
+          // Add user to the state array
+          return {...state,movie:action.payload}
+        })
+        builder.addCase(fetchAsyncShows.fulfilled, (state, action) => {
+            // Add user to the state array
+            return {...state,shows:action.payload}
+          })
+          builder.addCase(fetchAsyncMoviesOrShowsDetails.fulfilled, (state, action) => {
+            // Add user to the state array
+            return {...state,selectMovieOrShow:action.payload}
+          })
     }
+   
 })
 
-export const {addMovies} = movieSlice.actions;
+export const {removeSelectedMovieOrShow} = movieSlice.actions;
 export const getAllMovie = (state) => state.movies.movie;
+export const getAllShows = (state) => state.movies.shows;
+export const getMovieOrShowDetails = (state) => state.movies.selectMovieOrShow;
 export default movieSlice.reducer;
