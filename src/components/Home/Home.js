@@ -1,20 +1,18 @@
 import React, { useEffect } from "react";
 import MovieListing from "../MovieListing/MovieListing";
-import movieApi from "../../utils/apis/MoviesAPI";
-import { APIKEY } from "../../utils/apis/MovieApikeys";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   fetchAsyncMovies,
   fetchAsyncShows,
-  getAllMovie,
 } from "../../features/Movies/MovieSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-
+  const movieText = "Harry";
+  const showText = "Friends";
   useEffect(() => {
-    dispatch(fetchAsyncMovies());
-    dispatch(fetchAsyncShows());
+    dispatch(fetchAsyncMovies(movieText));
+    dispatch(fetchAsyncShows(showText));
   }, [dispatch]);
 
   return (
